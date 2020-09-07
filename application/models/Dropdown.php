@@ -113,18 +113,12 @@ class Dropdown extends CI_Model
 		return $result;
 	}
 
-	function get_value($table_name, $column_name, $where)
+	function getCodRows()
 	{
-		$query = $this->db
-			->select($column_name)
-			->from($table_name)
-			->where($where)
-			->get();
-		//echo $this->db->last_query();
-		if (!$query) return false;
-		if ($query->num_rows() > 0) {
-			$row = $query->first_row('array');
-			return $row[$column_name];
-		} else return false;
+		$this->db->select('area');
+		$this->db->from($this->codTbl);
+		$this->db->where('status !=', '0');
+		$query = $this->db->get();
+		return $query->result_array();
 	}
 }

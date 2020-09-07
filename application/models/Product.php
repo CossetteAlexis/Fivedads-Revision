@@ -6,7 +6,7 @@ class Product extends CI_Model
 
 	function __construct()
 	{
-		$this->proTable = 'products';
+		$this->proTable = 'items_test_tbl';
 		$this->custTable = 'customers';
 		$this->ordTable = 'orders';
 		$this->ordItemsTable = 'order_items';
@@ -20,19 +20,29 @@ class Product extends CI_Model
 	{
 		$this->db->select('*');
 		$this->db->from($this->proTable);
+		$this->db->where('boxes !=', '0');
 		$this->db->where('status', '1');
 		if ($id) {
-			$this->db->where('id', $id);
+			$this->db->where('itemid', $id);
 			$query = $this->db->get();
 			$result = $query->row_array();
 		} else {
-			$this->db->order_by('name', 'asc');
+			$this->db->order_by('boxes', 'asc');
 			$query = $this->db->get();
 			$result = $query->result_array();
 		}
 
 		// Return fetched data
 		return !empty($result) ? $result : false;
+	}
+
+	public function get_single($id)
+	{
+		$this->db->select('*');
+		$this->db->from($this->proTable);
+		$this->db->where('itemid', $id);
+		$result = $this->db->get();
+		return $result->row_array();
 	}
 	/*
      * Fetch order data from the database
@@ -47,10 +57,11 @@ class Product extends CI_Model
 		$query = $this->db->get();
 		$result = $query->row_array();
 
-		// Get order items
-		$this->db->select('i.*, p.image, p.name, p.price');
+		// Get order items 
+		// $this->db->select('i.*, p.image, p.name, p.price');
+		$this->db->select('i.*, p.name, p.price');
 		$this->db->from($this->ordItemsTable . ' as i');
-		$this->db->join($this->proTable . ' as p', 'p.id = i.product_id', 'left');
+		$this->db->join($this->proTable . ' as p', 'p.itemid = i.product_id', 'left');
 		$this->db->where('i.order_id', $id);
 		$query2 = $this->db->get();
 		$result['items'] = ($query2->num_rows() > 0) ? $query2->result_array() : array();

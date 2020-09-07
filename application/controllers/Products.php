@@ -26,23 +26,48 @@ class Products extends CI_Controller
 		$this->load->view('products/index', $data);
 	}
 
-	function addToCart($proID)
+	function add()
 	{
+		$id = $this->input->post('id');
+		$product = $this->product->getRows($id);
 
-		// Fetch specific product by ID
-		$product = $this->product->getRows($proID);
-
-		// Add product to the cart
 		$data = array(
-			'id'	=> $product['id'],
+			'id'	=> $product['itemid'],
 			'qty'	=> 1,
 			'price'	=> $product['price'],
 			'name'	=> $product['name'],
-			'image' => $product['image']
+			'boxes'	=> $product['boxes']
+		);
+		echo json_encode($data);
+	}
+
+	function addToCart()
+	{
+		$id = $this->input->post('id');
+		// Fetch specific product by ID
+		$product = $this->product->getRows($id);
+
+		// Add product to the cart
+		$data = array(
+			'id'	=> $product['itemid'],
+			'qty'	=> 1,
+			'price'	=> $product['price'],
+			'name'	=> $product['name']
+			// 'image' => $product['image']
 		);
 		$this->cart->insert($data);
 
 		// Redirect to the cart page
 		redirect('cart/');
+	}
+
+	function get_price()
+	{
+		$id = $this->input->post('id');
+		$product = $this->product->getRows($id);
+		$price = $product['price'];
+		// echo json_encode($price);
+		// echo json_encode(implode($price));
+		echo $price;
 	}
 }

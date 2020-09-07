@@ -177,56 +177,27 @@ class Checkout extends CI_Controller
 		$this->load->view($this->controller . '/order-success', $data);
 	}
 
-	function chk_cod()
+	function checkCod()
 	{
-		// if(!$this->Login_model->is_login()) $this->exit_err('Invalid Access!');
-		$citymunid = $this->input->post("city", TRUE);
-		$brgyid = $this->input->post("barangay", TRUE);
+		$cod = $this->dropdown->getCodRows();
+		$city = $this->input->post('city');
+		// $brgy = $this->input->post('barangay');
 
-		$citymun_code = $this->dropdown
-			->get_value(
-				'ph_citymun',
-				'citymun_code',
-				array('citymunid' => $citymunid),
-				'citymun ASC'
-			);
+		$cod_city = array_search($city, array_column($cod, 'area'));
+		// $cod_brgy = array_search($brgy, array_column($cod, 'area'));
 
-		$where = "status = 1
-			AND citymun_code = " . $citymun_code . "
-			AND NOT EXISTS(
-				SELECT branchid FROM noncod_areas
-				WHERE brgyid = " . $brgyid . "
-			)
-		";
+		// echo json_encode($cod);
+		// echo json_encode($cod_city);
 
-		$cod_branch = $this->dropdown
-			->get_value(
-				'cod_areas',
-				'branchid',
-				$where,
-				'branchid ASC'
-			);
-
-		if ($cod_branch) {
-			$cod = 'COD';
+		// if (!$cod_city or !$cod_brgy) {
+		// 	echo json_encode('cod');
+		// } else {
+		// 	echo json_encode('cop');
+		// }
+		if ($cod_city) {
+			echo json_encode(true);
 		} else {
-			$where = array(
-				'brgyid' => $brgyid,
-				'deliver' => 'COD'
-			);
-
-			// $cod_area = $this->My_model->get_row('cod_areas_lbc',$where);
-
-			// if($cod_area) {
-			// 	$cod = "COD via LBC";
-			// } else {
-			// 	$cod = 'Not COD.';
-			// }
+			echo json_encode(false);
 		}
-		//$cod = $this->db->last_query();
-		echo json_encode(array(
-			'cod'		=> $cod,
-			'query' => $this->db->last_query()
-		));
 	}
 }

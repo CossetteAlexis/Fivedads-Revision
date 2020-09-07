@@ -26,7 +26,7 @@
 				<div class="row col-lg-12 ord-addr-info">
 					<div class="hdr">Order Info</div>
 					<p><b>Reference ID : </b> #<?php echo $order['id']; ?></p>
-					<p><b>Total : </b> <?php echo '$' . $order['grand_total'] . ' USD'; ?></p>
+					<p><b>Total : </b> <?php echo '₱' . $order['grand_total'] . ' '; ?></p>
 					<p><b>Placed On : </b> <?php echo $order['created']; ?></p>
 					<p><b>Buyer Name : </b> <?php echo $order['firstname'] . ' ' . $order['lastname']; ?></p>
 					<p><b>Phone : </b> <?php echo $order['phone']; ?></p>
@@ -62,9 +62,9 @@
 											<img src="<?php echo $imageURL; ?>" width="75" />
 										</td>
 										<td><?php echo $item["name"]; ?></td>
-										<td><?php echo '$' . $item["price"] . ' USD'; ?></td>
+										<td><?php echo '₱' . $item["price"] . ''; ?></td>
 										<td><?php echo $item["quantity"]; ?></td>
-										<td><?php echo '$' . $item["sub_total"] . ' USD'; ?></td>
+										<td><?php echo '₱' . $item["sub_total"] . ' '; ?></td>
 									</tr>
 							<?php }
 							} ?>

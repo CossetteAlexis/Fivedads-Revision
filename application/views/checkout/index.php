@@ -56,7 +56,6 @@
 									option.attr('value', this.id).text(this.name);
 									$('#city').append(option);
 								});
-								chk_cod();
 							} else {
 								$('#city').html('<option value="">City not available</option>');
 							}
@@ -84,7 +83,6 @@
 									option.attr('value', this.id).text(this.name);
 									$('#barangay').append(option);
 								});
-								chk_cod();
 							} else {
 								$('#barangay').html('<option value="">Barangay not available</option>');
 							}
@@ -97,7 +95,8 @@
 		});
 
 		$(document).ready(function() {
-			// $('.check_cod').hide();
+			$('.cod').hide();
+			$('.cop').hide();
 			$('#country').change(function() {
 				var country = $('#country option:selected').text();
 				$('#cntry').val(country);
@@ -111,35 +110,31 @@
 				$('#cty').val(city);
 			});
 			$('#barangay').change(function() {
+				var city = $('#city option:selected').text();
 				var barangay = $('#barangay option:selected').text();
-				$('#brgy').val(barangay);
-				// $('.check_cod').show();
+				$('#brgy').val(city);
+				$.ajax({
+					type: 'POST',
+					url: '<?php echo base_url('checkout/checkCod'); ?>',
+					data: {
+						city
+					},
+					success: function(data) {
+						// console.log(data);
+						if (data == 'true') {
+							$('.cod').show();
+							$('.cop').hide();
+						} else {
+							$('.cop').show();
+							$('.cod').hide();
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert('Error: ' + textStatus + ' ' + errorThrown);
+					}
+				});
 			});
 		});
-
-		//check cod code
-		function chk_cod() {
-			if ($("#barangay").val() == 0) {
-				$(".cod_available").hide();
-				// $(".cod_not_available").show();
-				return false;
-			}
-			var values = {
-				'citymunid': $("#citymunid").val(),
-				'brgyid': $("#barangay").val()
-			};
-			$.post(`<?= base_url() ?>checkout/chk_cod`, values, function(data) {
-				$(".cod_available").show();
-				if (data.cod == "Not COD.") {
-					$(".cod_not_available").show();
-					$(".cod_available").hide();
-				} else {
-					$(".cod_not_available").hide();
-					$(".cod_available").show();
-				}
-				$(".chk_cod").text(data.cod);
-			}, "json");
-		}
 	</script>
 </head>
 
@@ -168,9 +163,9 @@
 											<?php $imageURL = !empty($item["image"]) ? base_url('uploads/product_images/' . $item["image"]) : base_url('assets/images/pro-demo-img.jpeg'); ?>
 											<img src="<?php echo $imageURL; ?>" width="75" />
 											<h6 class="my-0"><?php echo $item["name"]; ?></h6>
-											<small class="text-muted"><?php echo '$' . $item["price"]; ?>(<?php echo $item["qty"]; ?>)</small>
+											<small class="text-muted"><?php echo '₱' . $item["price"]; ?>(<?php echo $item["qty"]; ?>)</small>
 										</div>
-										<span class="text-muted"><?php echo '$' . $item["subtotal"]; ?></span>
+										<span class="text-muted"><?php echo '₱' . $item["subtotal"]; ?></span>
 									</li>
 								<?php }
 							} else { ?>
@@ -179,8 +174,8 @@
 								</li>
 							<?php } ?>
 							<li class="list-group-item d-flex justify-content-between">
-								<span>Total (USD)</span>
-								<strong><?php echo '$' . $this->cart->total(); ?></strong>
+								<span>Total </span>
+								<strong><?php echo '₱' . $this->cart->total(); ?></strong>
 							</li>
 						</ul>
 						<a href="<?php echo base_url('products/'); ?>" class="btn btn-block btn-info">Add Items</a>
@@ -264,16 +259,10 @@
 											<input name="barangay" id="brgy" type="text" hidden value="<?php echo !empty($custData['barangay']) ? $custData['barangay'] : ''; ?>">
 										</div>
 									</div>
-									<!-- show cod or cop -->
-									<span class="help-block success cod_available" style="display:none;">
-										<i class="fa fa-check"></i>
-										<span class="chk_cod"></span>
-									</span>
 
-									<span class="help-block warning cod_not_available" style="display:none;">
-										<i class="fa fa-times"></i>
-										<span class="chk_cod"></span>
-									</span>
+									<!-- show cod  -->
+									<p class="cod alert alert-success">Cash On Delivery</p>
+									<p class="cop alert alert-danger">Cash On Pickup</p>
 								</div>
 							</div>
 

@@ -7,15 +7,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
 
 	<!-- Include bootstrap library -->
 	<link href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>" rel="stylesheet">
 
 	<!-- Include custom css -->
-	<link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
 	<style>
+		.card {
+			border-radius: 0;
+			width: 100px;
+		}
+
 		#cart-modal .modal-dialog {
 			width: 350px;
 			margin: 3% auto;
@@ -131,7 +134,7 @@
 			<div class="navbar-header ">
 				<ul class="nav">
 					<li class="navbar-icon mr-3">
-						<button class="btn cart-modal-toggler" data-toggle="modal" data-target="#cart-modal"><i class="fa fa-2x fa-shopping-cart"></i></button>
+						<button class="btn cart-modal-toggler" data-toggle="modal" data-target="#cart-modal"><i class="fa fa-2x fa-shopping-cart"></i><span class="badge badge-danger"><?php echo ($this->cart->total_items() > 0) ? $this->cart->total_items() . ' ' : '0'; ?></span></button>
 					</li>
 					<li class="navbar-icon">
 						<button class="btn user-modal-toggler" data-toggle="modal" data-target="#login-modal"><i class="fa fa-2x fa-user"></i></button>
@@ -286,7 +289,7 @@
 							<tr class="item">
 								<td><img src="http://localhost/fivedads_revision/images/new-normal-1-eva.jpg" alt="Product Image" height="100" width="100" class="pull-left">
 									<span class="font-weight-bold">
-										Eva Gluthathione
+										Lorem ipsum
 									</span>
 									<p>
 										5boxes x ₱6,500.00
@@ -295,7 +298,7 @@
 							</tr>
 							<td><img src="http://localhost/fivedads_revision/images/new-normal-1-eva.jpg" alt="Product Image" height="100" width="100" class="pull-left">
 								<span class="font-weight-bold">
-									Eva Gluthathione
+									Lorem Ipsum
 								</span>
 								<p>
 									5boxes x ₱6,500.00
@@ -304,24 +307,18 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Update</button>
-					<button type="button" class="btn btn-primary">Checkout</button>
+				<div class="modal-footer justify-content-center">
+					<a href="<?php echo base_url('cart'); ?>" class="btn btn-primary">View Cart</a>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- End of Cart Modal -->
-	<div class="container-fluid px-5">
 
-		<!-- Cart basket -->
-		<div class="cart-view">
-			<a href="<?php echo base_url('cart'); ?>" title="View Cart"><i class="icart"></i> (<?php echo ($this->cart->total_items() > 0) ? $this->cart->total_items() . ' Items' : 'Empty'; ?>)</a>
-		</div>
-
+	<div class="container">
 		<!-- List all products -->
 		<div class="row">
-			<div class="col-md-6 pt-5">
+			<div class="col-md-5 pt-5">
 				<div class="d-flex">
 					<div class="thumbnail">
 						<div class="thumbnails">
@@ -341,30 +338,121 @@
 					</div>
 					<div class="preview mx-3">
 						<div>
-							<img class="preview-image" src="" alt="Product Image">
+							<img class="preview-image" src="http://localhost/fivedads_revision/images/new-normal-1-eva.jpg" alt="Product Image">
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6 pt-5">
-				<?php if (!empty($products)) {
-					foreach ($products as $row) { ?>
-						<div class="card">
-							<p><?php echo $row['name']; ?></p>
-							<a href="<?php echo base_url('products/addToCart/' . $row['id']); ?>" class="btn btn-primary btn-block"><?= $row['name']; ?></a>
-						</div>
-					<?php }
-				} else { ?>
-					<p>Product(s) not found...</p>
-				<?php } ?>
+			<div class="col-md-7 pt-5 pl-5">
+				<h1>EVA GLUTHATHIONE</h1>
+				<hr style="border-top:solid 2px black;">
+				<h4 class="price">₱ 985.00</h4>
+				<div class="row">
+					<?php if (!empty($products)) {
+						foreach ($products as $row) { ?>
+							<?php if (substr($row['item_code'], 0, 3) == 'EVA') { ?>
+								<div class="card m-1 float-left">
+									<button id="<?= $row['itemid']; ?>" class="btn btn-default  eva"><?= '<small><strong>' . $row['boxes'] . '</strong></small>'; ?></button>
+									<input name="id" class="id" type="text" value="" hidden>
+								</div>
+							<?php } ?>
+						<?php }
+					} else { ?>
+						<p>Product(s) not found...</p>
+					<?php } ?>
+				</div>
+				<div class="row mt-5 ">
+					<button class="buy btn btn-outline-primary">Buy now</button>
+					<button class="add btn btn-primary mx-5" data-toggle="modal" data-target="#addmodal">Add to cart</button>
+				</div>
 			</div>
 		</div>
 	</div>
+
+
+
+	<div class=" container pt-5">
+		<!-- List all products -->
+		<div class="row">
+			<div class="col-md-5 pt-5">
+				<div class="d-flex">
+					<div class="thumbnail">
+						<div class="thumbnails">
+							<div class="">
+								<img class="autofocus-img tab" id="" onclick="preview(this.src)" src="http://localhost/fivedads_revision/images/new-combo-2box-eva-1box-tck.jpg" alt="Image 1" tabindex="1">
+							</div>
+							<div class="pt-2">
+								<img class="tab" onclick="preview(this.src)" id="" src="http://localhost/fivedads_revision/images/new-normal-1-eva.jpg" alt="Image 2" tabindex="2">
+							</div>
+							<div class="pt-2">
+								<img class="tab" onclick="preview(this.src)" id="" src="http://localhost/fivedads_revision/images/silver-eva-tck.jpg" alt="Image 3" tabindex="3">
+							</div>
+							<div class="pt-2">
+								<img class="tab" onclick="preview(this.src)" id="" src="http://localhost/fivedads_revision/images/10 boxex-tck.jpg" alt="Image 4" tabindex="4">
+							</div>
+						</div>
+					</div>
+					<div class="preview mx-3">
+						<div>
+							<img class="preview-image" src="http://localhost/fivedads_revision/images/10 boxex-tck.jpg" alt=" Product Image">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-7 pl-5 pt-5">
+				<h1>TCK</h1>
+				<hr style="border-top:solid 2px black;">
+				<h4 class="price2">₱ 885.00</h4>
+				<div class="row">
+					<?php if (!empty($products)) {
+						foreach ($products as $row) { ?>
+							<?php if (substr($row['item_code'], 0, 3) == 'TCK') { ?>
+								<div class="card m-1 float-left">
+									<button id="<?= $row['itemid']; ?>" class="btn btn-default  tck"><?= '<small><strong>' . $row['boxes'] . '</strong></small>'; ?></button>
+									<input name="id2" class="id2" type="text" value="" hidden>
+								</div>
+							<?php } ?>
+						<?php }
+					} else { ?>
+						<p>Product(s) not found...</p>
+					<?php } ?>
+				</div>
+				<div class="row mt-5 ">
+					<button class="btn btn-outline-primary ">Buy now</button>
+					<button class="add btn btn-primary mx-5" data-toggle="modal" data-target="#addmodal">Add to cart</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body text-center">
+					<strong class="modal-name">Please select a product first.</strong>
+					<p class="modal-price"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">CONTINUE SHOPPING</button>
+					<button type="button" class="addtocart btn btn-primary">ADD TO CART</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+	<script src="<?php echo base_url('assets/js/jquery.min.js'); ?>"></script>
 	<script>
 		$(document).ready(function() {
 			if (window.matchMedia("(max-width: 767px)").matches) {
@@ -393,27 +481,28 @@
 		});
 
 		$('.text').hide();
-		$(document).ready(function() {
-			$('.addtocart').on('click', function() {
-				var text = $('.addtocart').text();
-				if (text === "ADD TO CART") {
-					$(this).html('THANK YOU');
-					$('.text').show();
-					$('.addtocart').prop('disabled', true);
-					$('.buy').prop('disabled', true);
+		// $(document).ready(function() {
+		// 	$('.addtocart').on('click', function() {
+		// 		var text = $('.addtocart').text();
+		// 		if (text === "ADD TO CART") {
+		// 			$(this).html('THANK YOU');
+		// 			$('.text').show();
+		// 			$('.addtocart').prop('disabled', true);
+		// 			$('.buy').prop('disabled', true);
 
-				} else {
-					$(this).text('ADD TO CART');
-					$('.text').hide();
-				}
-			});
-		});
+		// 		} else {
+		// 			$(this).text('ADD TO CART');
+		// 			$('.text').hide();
+		// 		}
+		// 	});
+		// });
 
 		$(document).ready(function() {
 			$('.minus, .plus, .up, .down').focus(function() {
 				this.blur();
 			});
 		});
+
 
 		$(document).ready(function() {
 			$('.autofocus-img').click();
@@ -442,6 +531,89 @@
 			$('.more').click(function() {
 				source = document.getElementsByClassName('tab')[0].src
 				document.getElementsByClassName('preview-image')[0].src = source;
+			});
+		});
+
+		$(document).ready(function() {
+			$('.eva').click(function() {
+				var id = $(this).attr('id');
+				$('.id').val(id);
+				$.ajax({
+					type: 'POST',
+					url: '<?= base_url('products/get_price'); ?>',
+					data: {
+						id
+					},
+					success: function(result) {
+						// console.log(result)
+						$('.price').text('₱ ' + result);
+					},
+					error: function(result) {
+						console.log(result);
+					}
+				})
+			});
+			$('.tck').click(function() {
+				var id = $(this).attr('id');
+				$('.id').val(id);
+				$.ajax({
+					type: 'POST',
+					url: '<?= base_url('products/get_price'); ?>',
+					data: {
+						id
+					},
+					success: function(result) {
+						// console.log(result)
+						$('.price2').text('₱ ' + result);
+					},
+					error: function(result) {
+						console.log(result);
+					}
+				})
+			});
+			$('.add').click(function() {
+				var id = $('.id').val();
+				$.ajax({
+					type: 'POST',
+					url: '<?= base_url('products/add'); ?>',
+					data: {
+						id
+					},
+					success: function(data) {
+						// console.log(data)
+						// $('.price').text('₱ ' + result);
+						if (id != null) {
+							var dataObj = jQuery.parseJSON(data);
+							if (dataObj) {
+								$(dataObj).each(function() {
+									$('.modal-name').text(this.name);
+									$('.modal-price').text(this.price);
+								});
+							} else {
+								$('.modal-name').text('Please select a product first.');
+							}
+						} else {
+							$('.modal-name').text('Please select a product first.');
+						}
+					},
+					error: function(result) {
+						// console.log(result);
+					}
+				})
+			});
+			$('.addtocart').click(function() {
+				var id = $('.id').val();
+				$.ajax({
+					type: 'POST',
+					url: '<?= base_url('products/addtocart'); ?>',
+					data: {
+						id
+					},
+					success: function(result) {
+						window.open('<?= base_url('cart'); ?>', '_self');
+					},
+					error: function(result) {}
+				})
 			});
 		});
 	</script>
